@@ -1,23 +1,28 @@
 # 待办事项网页应用
 
-一个纯前端 HTML 待办事项应用，可以添加、删除、勾选完成待办事项。
-
-## 使用方式
-
-直接用浏览器打开 `index.html` 即可运行，不需要安装依赖或启动服务。
+一个使用 Vite、React、TypeScript 和 shadcn/ui 构建的待办事项网页应用。
 
 ## 功能
 
 - 添加新的待办事项
 - 勾选待办事项为已完成
 - 删除待办事项
-- 显示总数和已完成数量
+- 显示总数、待处理数量和已完成数量
 - 切换浅色 / 深色主题
 
-## 文件结构
+## 本地运行
 
-```text
-.
-├── README.md
-└── index.html
+```bash
+pnpm install
+pnpm dev
 ```
+
+## 构建
+
+```bash
+pnpm build
+```
+
+## 部署
+
+项目通过 GitHub Actions 构建并部署到 GitHub Pages。
