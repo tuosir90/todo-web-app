@@ -32,6 +32,23 @@ type Todo = {
 
 const TODOS_STORAGE_KEY = "todo-web-app.todos"
 
+function getStoredTodos(): string | null {
+  try {
+    return localStorage.getItem(TODOS_STORAGE_KEY)
+  } catch (error) {
+    console.warn("Todo storage is unavailable.", error)
+    return null
+  }
+}
+
+function storeTodos(todos: Todo[]) {
+  try {
+    localStorage.setItem(TODOS_STORAGE_KEY, JSON.stringify(todos))
+  } catch (error) {
+    console.warn("Todo storage is unavailable.", error)
+  }
+}
+
 function createTodo(text: string): Todo {
   return {
     id: crypto.randomUUID(),
@@ -54,7 +71,7 @@ function isTodo(value: unknown): value is Todo {
 }
 
 function loadTodos(): Todo[] {
-  const savedTodos = localStorage.getItem(TODOS_STORAGE_KEY)
+  const savedTodos = getStoredTodos()
   if (!savedTodos) {
     return []
   }
@@ -77,7 +94,7 @@ export function App() {
   const isDark = theme === "dark"
 
   React.useEffect(() => {
-    localStorage.setItem(TODOS_STORAGE_KEY, JSON.stringify(todos))
+    storeTodos(todos)
   }, [todos])
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
