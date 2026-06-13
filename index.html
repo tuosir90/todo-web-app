@@ -9,6 +9,7 @@
         color-scheme: light;
         --bg: #f4f7f8;
         --panel: #ffffff;
+        --item-bg: #fbfcfc;
         --text: #172126;
         --muted: #68757d;
         --line: #dbe3e6;
@@ -16,6 +17,20 @@
         --accent-dark: #155c52;
         --danger: #bd3b31;
         --shadow: 0 16px 40px rgba(23, 33, 38, 0.12);
+      }
+
+      body.dark {
+        color-scheme: dark;
+        --bg: #101820;
+        --panel: #18242d;
+        --item-bg: #202f39;
+        --text: #edf5f7;
+        --muted: #9fb0b8;
+        --line: #30424d;
+        --accent: #45b6a6;
+        --accent-dark: #2f9a8c;
+        --danger: #ff7b6f;
+        --shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
       }
 
       * {
@@ -48,9 +63,36 @@
         line-height: 1.2;
       }
 
+      .header {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+
+      .title-block {
+        min-width: 0;
+      }
+
       .summary {
-        margin: 0 0 24px;
+        margin: 0;
         color: var(--muted);
+      }
+
+      .theme-toggle {
+        flex: 0 0 auto;
+        border: 1px solid var(--line);
+        background: var(--item-bg);
+        color: var(--text);
+        min-height: 40px;
+        padding: 0 12px;
+      }
+
+      .theme-toggle:hover,
+      .theme-toggle:focus-visible {
+        border-color: var(--accent);
+        color: var(--accent);
       }
 
       form {
@@ -64,6 +106,8 @@
         min-width: 0;
         border: 1px solid var(--line);
         border-radius: 6px;
+        background: var(--panel);
+        color: var(--text);
         padding: 12px 14px;
         font: inherit;
       }
@@ -109,7 +153,7 @@
         padding: 10px 12px;
         border: 1px solid var(--line);
         border-radius: 6px;
-        background: #fbfcfc;
+        background: var(--item-bg);
       }
 
       li.completed .task-text {
@@ -156,11 +200,17 @@
           padding: 20px;
         }
 
+        .header {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
         form {
           flex-direction: column;
         }
 
-        .add-button {
+        .add-button,
+        .theme-toggle {
           width: 100%;
         }
       }
@@ -168,8 +218,13 @@
   </head>
   <body>
     <main>
-      <h1>待办事项</h1>
-      <p class="summary" id="summary">还没有待办事项</p>
+      <div class="header">
+        <div class="title-block">
+          <h1>待办事项</h1>
+          <p class="summary" id="summary">还没有待办事项</p>
+        </div>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false">深色主题</button>
+      </div>
 
       <form id="todo-form">
         <input id="todo-input" type="text" placeholder="输入新的待办事项" autocomplete="off" required>
@@ -186,8 +241,18 @@
       const list = document.querySelector("#todo-list");
       const summary = document.querySelector("#summary");
       const emptyState = document.querySelector("#empty-state");
+      const themeToggle = document.querySelector("#theme-toggle");
 
       const todos = [];
+      const savedTheme = localStorage.getItem("todo-theme");
+
+      function setTheme(theme) {
+        const isDark = theme === "dark";
+        document.body.classList.toggle("dark", isDark);
+        themeToggle.textContent = isDark ? "浅色主题" : "深色主题";
+        themeToggle.setAttribute("aria-pressed", String(isDark));
+        localStorage.setItem("todo-theme", theme);
+      }
 
       function updateSummary() {
         const total = todos.length;
@@ -260,6 +325,12 @@
         renderTodos();
       });
 
+      themeToggle.addEventListener("click", () => {
+        const nextTheme = document.body.classList.contains("dark") ? "light" : "dark";
+        setTheme(nextTheme);
+      });
+
+      setTheme(savedTheme === "dark" ? "dark" : "light");
       updateSummary();
     </script>
   </body>
