@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>待办事项</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f4f7f8;
+        --panel: #ffffff;
+        --text: #172126;
+        --muted: #68757d;
+        --line: #dbe3e6;
+        --accent: #1f7a6d;
+        --accent-dark: #155c52;
+        --danger: #bd3b31;
+        --shadow: 0 16px 40px rgba(23, 33, 38, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: grid;
+        place-items: start center;
+        padding: 48px 16px;
+      }
+
+      main {
+        width: min(100%, 640px);
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+        padding: 28px;
+      }
+
+      h1 {
+        margin: 0 0 6px;
+        font-size: 28px;
+        line-height: 1.2;
+      }
+
+      .summary {
+        margin: 0 0 24px;
+        color: var(--muted);
+      }
+
+      form {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 22px;
+      }
+
+      input[type="text"] {
+        flex: 1;
+        min-width: 0;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 12px 14px;
+        font: inherit;
+      }
+
+      input[type="text"]:focus {
+        outline: 3px solid rgba(31, 122, 109, 0.18);
+        border-color: var(--accent);
+      }
+
+      button {
+        border: 0;
+        border-radius: 6px;
+        font: inherit;
+        cursor: pointer;
+      }
+
+      .add-button {
+        background: var(--accent);
+        color: #ffffff;
+        padding: 0 18px;
+        min-height: 46px;
+      }
+
+      .add-button:hover,
+      .add-button:focus-visible {
+        background: var(--accent-dark);
+      }
+
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 10px;
+      }
+
+      li {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 12px;
+        align-items: center;
+        min-height: 52px;
+        padding: 10px 12px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: #fbfcfc;
+      }
+
+      li.completed .task-text {
+        color: var(--muted);
+        text-decoration: line-through;
+      }
+
+      input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        accent-color: var(--accent);
+      }
+
+      .task-text {
+        overflow-wrap: anywhere;
+      }
+
+      .delete-button {
+        background: transparent;
+        color: var(--danger);
+        padding: 8px 10px;
+      }
+
+      .delete-button:hover,
+      .delete-button:focus-visible {
+        background: rgba(189, 59, 49, 0.1);
+      }
+
+      .empty {
+        margin: 0;
+        padding: 18px;
+        border: 1px dashed var(--line);
+        border-radius: 6px;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      @media (max-width: 520px) {
+        body {
+          padding: 20px 12px;
+        }
+
+        main {
+          padding: 20px;
+        }
+
+        form {
+          flex-direction: column;
+        }
+
+        .add-button {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>待办事项</h1>
+      <p class="summary" id="summary">还没有待办事项</p>
+
+      <form id="todo-form">
+        <input id="todo-input" type="text" placeholder="输入新的待办事项" autocomplete="off" required>
+        <button class="add-button" type="submit">添加</button>
+      </form>
+
+      <ul id="todo-list" aria-label="待办事项列表"></ul>
+      <p class="empty" id="empty-state">暂无待办事项</p>
+    </main>
+
+    <script>
+      const form = document.querySelector("#todo-form");
+      const input = document.querySelector("#todo-input");
+      const list = document.querySelector("#todo-list");
+      const summary = document.querySelector("#summary");
+      const emptyState = document.querySelector("#empty-state");
+
+      const todos = [];
+
+      function updateSummary() {
+        const total = todos.length;
+        const completed = todos.filter((todo) => todo.completed).length;
+
+        if (total === 0) {
+          summary.textContent = "还没有待办事项";
+        } else {
+          summary.textContent = `共 ${total} 项，已完成 ${completed} 项`;
+        }
+
+        emptyState.hidden = total > 0;
+      }
+
+      function renderTodos() {
+        list.innerHTML = "";
+
+        todos.forEach((todo) => {
+          const item = document.createElement("li");
+          item.className = todo.completed ? "completed" : "";
+
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.checked = todo.completed;
+          checkbox.setAttribute("aria-label", `标记 ${todo.text} 为完成`);
+          checkbox.addEventListener("change", () => {
+            todo.completed = checkbox.checked;
+            renderTodos();
+          });
+
+          const text = document.createElement("span");
+          text.className = "task-text";
+          text.textContent = todo.text;
+
+          const deleteButton = document.createElement("button");
+          deleteButton.className = "delete-button";
+          deleteButton.type = "button";
+          deleteButton.textContent = "删除";
+          deleteButton.addEventListener("click", () => {
+            const index = todos.findIndex((itemToFind) => itemToFind.id === todo.id);
+            if (index !== -1) {
+              todos.splice(index, 1);
+              renderTodos();
+            }
+          });
+
+          item.append(checkbox, text, deleteButton);
+          list.append(item);
+        });
+
+        updateSummary();
+      }
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const text = input.value.trim();
+        if (!text) {
+          return;
+        }
+
+        todos.unshift({
+          id: crypto.randomUUID(),
+          text,
+          completed: false,
+        });
+
+        input.value = "";
+        input.focus();
+        renderTodos();
+      });
+
+      updateSummary();
+    </script>
+  </body>
+</html>
