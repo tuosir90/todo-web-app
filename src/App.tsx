@@ -1,12 +1,12 @@
 import * as React from "react"
 import {
-  CheckCircle2,
-  Circle,
-  Moon,
-  Plus,
-  Sun,
-  Trash2,
-} from "lucide-react"
+  RiAddLine,
+  RiCheckboxCircleLine,
+  RiCircleLine,
+  RiDeleteBinLine,
+  RiMoonLine,
+  RiSunLine,
+} from "@remixicon/react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -30,6 +30,8 @@ type Todo = {
   completed: boolean
 }
 
+const TODOS_STORAGE_KEY = "todo-web-app.todos"
+
 function createTodo(text: string): Todo {
   return {
     id: crypto.randomUUID(),
@@ -38,14 +40,45 @@ function createTodo(text: string): Todo {
   }
 }
 
+function isTodo(value: unknown): value is Todo {
+  if (typeof value !== "object" || value === null) {
+    return false
+  }
+
+  const todo = value as Record<string, unknown>
+  return (
+    typeof todo.id === "string" &&
+    typeof todo.text === "string" &&
+    typeof todo.completed === "boolean"
+  )
+}
+
+function loadTodos(): Todo[] {
+  const savedTodos = localStorage.getItem(TODOS_STORAGE_KEY)
+  if (!savedTodos) {
+    return []
+  }
+
+  try {
+    const parsedTodos = JSON.parse(savedTodos)
+    return Array.isArray(parsedTodos) ? parsedTodos.filter(isTodo) : []
+  } catch {
+    return []
+  }
+}
+
 export function App() {
   const { theme, setTheme } = useTheme()
   const [inputValue, setInputValue] = React.useState("")
-  const [todos, setTodos] = React.useState<Todo[]>([])
+  const [todos, setTodos] = React.useState<Todo[]>(loadTodos)
 
   const completedCount = todos.filter((todo) => todo.completed).length
   const activeCount = todos.length - completedCount
   const isDark = theme === "dark"
+
+  React.useEffect(() => {
+    localStorage.setItem(TODOS_STORAGE_KEY, JSON.stringify(todos))
+  }, [todos])
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -91,7 +124,7 @@ export function App() {
                 aria-label={isDark ? "切换到浅色主题" : "切换到深色主题"}
                 onClick={() => setTheme(isDark ? "light" : "dark")}
               >
-                {isDark ? <Sun /> : <Moon />}
+                {isDark ? <RiSunLine /> : <RiMoonLine />}
               </Button>
             </CardAction>
           </CardHeader>
@@ -105,18 +138,18 @@ export function App() {
                 aria-label="新的待办事项"
               />
               <Button className="h-10 px-4" type="submit">
-                <Plus />
+                <RiAddLine />
                 添加
               </Button>
             </form>
 
             <div className="flex flex-wrap gap-2">
               <Badge variant="secondary">
-                <Circle />
+                <RiCircleLine />
                 待处理 {activeCount}
               </Badge>
               <Badge variant="outline">
-                <CheckCircle2 />
+                <RiCheckboxCircleLine />
                 已完成 {completedCount}
               </Badge>
             </div>
@@ -158,7 +191,7 @@ export function App() {
                       className="text-muted-foreground hover:text-destructive"
                       onClick={() => deleteTodo(todo.id)}
                     >
-                      <Trash2 />
+                      <RiDeleteBinLine />
                     </Button>
                   </li>
                 ))}
