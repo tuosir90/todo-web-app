@@ -179,9 +179,9 @@ export function ThemeProvider({
             ? "light"
             : currentTheme === "light"
               ? "dark"
-                : getSystemTheme() === "dark"
-                  ? "light"
-                  : "dark"
+              : getSystemTheme() === "dark"
+                ? "light"
+                : "dark"
 
         storeTheme(storageKey, nextTheme)
         return nextTheme
