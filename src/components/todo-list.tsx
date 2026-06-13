@@ -1,4 +1,4 @@
-import { Calendar, Tag, Trash } from "@phosphor-icons/react"
+import { IconCalendar, IconTag, IconTrash } from "@tabler/icons-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -33,7 +33,7 @@ export function TodoList({
     return (
       <div className="border border-dashed border-border bg-muted/35 px-4 py-12 text-center">
         <div className="mx-auto mb-3 flex size-10 items-center justify-center border border-border bg-background">
-          <Tag className="size-5 text-muted-foreground" />
+          <IconTag className="size-5 text-muted-foreground" />
         </div>
         <p className="text-sm font-medium">暂无待办事项</p>
         <p className="mt-1 text-xs text-muted-foreground">
@@ -51,7 +51,7 @@ export function TodoList({
         <section key={date} className="space-y-2">
           <div className="flex items-center justify-between gap-3 border-b border-border pb-2">
             <h2 className="flex min-w-0 items-center gap-2 text-sm font-medium">
-              <Calendar className="size-4 shrink-0" />
+              <IconCalendar className="size-4 shrink-0" />
               <span className="truncate">{formatDateLabel(date)}</span>
             </h2>
             <Badge variant="outline">{dateTodos.length} 项</Badge>
@@ -91,7 +91,7 @@ export function TodoList({
                   className="text-muted-foreground hover:text-destructive"
                   onClick={() => onDeleteTodo(todo.id)}
                 >
-                  <Trash />
+                  <IconTrash />
                 </Button>
               </li>
             ))}

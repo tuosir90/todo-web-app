@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Plus } from "@phosphor-icons/react"
+import { IconPlus } from "@tabler/icons-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -105,7 +105,7 @@ export function TodoForm({
             </Select>
           </div>
           <Button className="h-10 px-4" type="submit">
-            <Plus />
+            <IconPlus />
             添加
           </Button>
         </form>

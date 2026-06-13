@@ -1,14 +1,14 @@
 import {
-  BookOpen,
-  Briefcase,
-  Funnel,
-  Heartbeat,
-  House,
-  ListBullets,
-  Moon,
-  ShoppingCart,
-  Sun,
-} from "@phosphor-icons/react"
+  IconBook,
+  IconBriefcase,
+  IconFilter,
+  IconHeartbeat,
+  IconHome,
+  IconList,
+  IconMoon,
+  IconShoppingCart,
+  IconSun,
+} from "@tabler/icons-react"
 import type * as React from "react"
 
 import { Button } from "@/components/ui/button"
@@ -45,11 +45,11 @@ type TodoSidebarProps = {
 }
 
 const categoryIcons: Record<TodoCategoryId, React.ElementType> = {
-  work: Briefcase,
-  study: BookOpen,
-  life: House,
-  health: Heartbeat,
-  shopping: ShoppingCart,
+  work: IconBriefcase,
+  study: IconBook,
+  life: IconHome,
+  health: IconHeartbeat,
+  shopping: IconShoppingCart,
 }
 
 export function TodoSidebar({
@@ -75,7 +75,7 @@ export function TodoSidebar({
       <SidebarHeader className="p-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-sm font-medium">
-            <ListBullets className="size-4" />
+            <IconList className="size-4" />
             <span>待办工作台</span>
           </div>
           <p className="text-xs text-sidebar-foreground/70">
@@ -86,7 +86,7 @@ export function TodoSidebar({
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>
-            <Funnel className="size-4" />
+            <IconFilter className="size-4" />
             分类
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -97,7 +97,7 @@ export function TodoSidebar({
                   tooltip="全部分类"
                   onClick={() => onCategoryChange("all")}
                 >
-                  <ListBullets />
+                  <IconList />
                   <span>全部分类</span>
                 </SidebarMenuButton>
                 <SidebarMenuBadge>{todos.length}</SidebarMenuBadge>
@@ -147,7 +147,7 @@ export function TodoSidebar({
           className="w-full justify-start"
           onClick={onToggleTheme}
         >
-          {isDark ? <Sun /> : <Moon />}
+          {isDark ? <IconSun /> : <IconMoon />}
           {isDark ? "浅色模式" : "深色模式"}
         </Button>
       </SidebarFooter>

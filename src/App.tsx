@@ -1,5 +1,5 @@
 import * as React from "react"
-import { CheckCircle, Circle } from "@phosphor-icons/react"
+import { IconCircle, IconCircleCheck } from "@tabler/icons-react"
 
 import { Badge } from "@/components/ui/badge"
 import {
@@ -93,11 +93,11 @@ export function App() {
             </div>
             <div className="ml-auto hidden items-center gap-2 sm:flex">
               <Badge variant="secondary">
-                <Circle />
+                <IconCircle />
                 待处理 {activeCount}
               </Badge>
               <Badge variant="outline">
-                <CheckCircle />
+                <IconCircleCheck />
                 已完成 {completedCount}
               </Badge>
             </div>
