@@ -6,6 +6,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -53,14 +54,15 @@ export function TodoForm({
   return (
     <Card className="border-border/80 shadow-xs">
       <CardHeader>
-        <CardTitle>添加待办</CardTitle>
+        <CardTitle>快速捕获</CardTitle>
         <CardDescription>
-          为事项选择日期与分类，列表会按日期分组展示。
+          记录事项、日期和分类，之后在右侧按日期推进。
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form
-          className="grid gap-4 lg:grid-cols-[1fr_11rem_12rem_auto] lg:items-end"
+          className="grid gap-4"
+          id="todo-create-form"
           onSubmit={handleSubmit}
         >
           <div className="space-y-2">
@@ -104,12 +106,14 @@ export function TodoForm({
               </SelectContent>
             </Select>
           </div>
-          <Button className="h-10 px-4" type="submit">
-            <IconPlus />
-            添加
-          </Button>
         </form>
       </CardContent>
+      <CardFooter>
+        <Button className="h-10 w-full" form="todo-create-form" type="submit">
+          <IconPlus />
+          添加到计划
+        </Button>
+      </CardFooter>
     </Card>
   )
 }

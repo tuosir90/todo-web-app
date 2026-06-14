@@ -4,6 +4,7 @@ import {
   IconFilter,
   IconHeartbeat,
   IconHome,
+  IconInnerShadowTop,
   IconList,
   IconMoon,
   IconShoppingCart,
@@ -72,16 +73,18 @@ export function TodoSidebar({
 
   return (
     <Sidebar collapsible="icon" variant="inset">
-      <SidebarHeader className="p-4">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 text-sm font-medium">
-            <IconList className="size-4" />
-            <span>待办工作台</span>
-          </div>
-          <p className="text-xs text-sidebar-foreground/70">
-            按分类筛选，按日期执行。
-          </p>
-        </div>
+      <SidebarHeader className="border-b">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              className="data-[slot=sidebar-menu-button]:p-1.5!"
+              tooltip="待办工作台"
+            >
+              <IconInnerShadowTop className="size-5!" />
+              <span className="text-base font-semibold">待办工作台</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
@@ -128,11 +131,11 @@ export function TodoSidebar({
         <SidebarGroup>
           <SidebarGroupLabel>概览</SidebarGroupLabel>
           <SidebarGroupContent className="space-y-2 px-2">
-            <div className="flex items-center justify-between text-xs">
+            <div className="flex items-center justify-between rounded-md bg-sidebar-accent px-2 py-1.5 text-xs text-sidebar-accent-foreground">
               <span className="text-sidebar-foreground/70">待处理</span>
               <span className="font-medium">{activeCount}</span>
             </div>
-            <div className="flex items-center justify-between text-xs">
+            <div className="flex items-center justify-between rounded-md px-2 py-1.5 text-xs">
               <span className="text-sidebar-foreground/70">已完成</span>
               <span className="font-medium">{completedCount}</span>
             </div>

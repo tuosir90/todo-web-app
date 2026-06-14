@@ -49,6 +49,14 @@ export function formatDateLabel(dateValue: string) {
   }).format(new Date(year, month - 1, day))
 }
 
+export function isDateBeforeToday(dateValue: string) {
+  return dateValue < getTodayDateValue()
+}
+
+export function isDateToday(dateValue: string) {
+  return dateValue === getTodayDateValue()
+}
+
 export function isTodoCategoryId(value: string): value is TodoCategoryId {
   return TODO_CATEGORIES.some((category) => category.id === value)
 }

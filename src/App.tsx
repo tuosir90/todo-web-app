@@ -1,15 +1,11 @@
 import * as React from "react"
-import { IconCircle, IconCircleCheck } from "@tabler/icons-react"
 
-import { Badge } from "@/components/ui/badge"
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar"
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { TodoForm } from "@/components/todo-form"
 import { TodoList } from "@/components/todo-list"
+import { TodoOverviewCards } from "@/components/todo-overview-cards"
 import { TodoSidebar } from "@/components/todo-sidebar"
+import { TodoSiteHeader } from "@/components/todo-site-header"
 import { useTheme } from "@/components/theme-provider"
 import {
   createTodo,
@@ -71,7 +67,14 @@ export function App() {
   }
 
   return (
-    <SidebarProvider>
+    <SidebarProvider
+      style={
+        {
+          "--sidebar-width": "calc(var(--spacing) * 64)",
+          "--header-height": "calc(var(--spacing) * 14)",
+        } as React.CSSProperties
+      }
+    >
       <TodoSidebar
         activeCategory={activeCategory}
         activeCount={activeCount}
@@ -83,39 +86,29 @@ export function App() {
       />
       <SidebarInset>
         <div className="flex min-h-svh flex-col bg-background">
-          <header className="flex items-center gap-3 border-b border-border px-4 py-3 sm:px-6">
-            <SidebarTrigger />
-            <div className="min-w-0">
-              <h1 className="text-lg font-medium">待办事项</h1>
-              <p className="truncate text-xs text-muted-foreground">
-                当前查看 {activeCategoryLabel}，共 {visibleTodos.length} 项
-              </p>
-            </div>
-            <div className="ml-auto hidden items-center gap-2 sm:flex">
-              <Badge variant="secondary">
-                <IconCircle />
-                待处理 {activeCount}
-              </Badge>
-              <Badge variant="outline">
-                <IconCircleCheck />
-                已完成 {completedCount}
-              </Badge>
-            </div>
-          </header>
-          <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
-            <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
-              <TodoForm
-                categoryId={newTodoCategory}
-                onCategoryChange={setNewTodoCategory}
-                onAddTodo={addTodo}
-              />
-              <TodoList
-                activeCategory={activeCategory}
-                activeCategoryLabel={activeCategoryLabel}
-                todos={visibleTodos}
-                onDeleteTodo={deleteTodo}
-                onToggleTodo={toggleTodo}
-              />
+          <TodoSiteHeader
+            activeCategoryLabel={activeCategoryLabel}
+            activeCount={activeCount}
+            completedCount={completedCount}
+            visibleCount={visibleTodos.length}
+          />
+          <main className="@container/main flex flex-1 flex-col">
+            <div className="flex flex-col gap-4 px-4 py-4 md:gap-6 md:px-6 md:py-6">
+              <TodoOverviewCards todos={todos} />
+              <div className="grid gap-4 xl:grid-cols-[minmax(0,22rem)_1fr]">
+                <TodoForm
+                  categoryId={newTodoCategory}
+                  onCategoryChange={setNewTodoCategory}
+                  onAddTodo={addTodo}
+                />
+                <TodoList
+                  activeCategory={activeCategory}
+                  activeCategoryLabel={activeCategoryLabel}
+                  todos={visibleTodos}
+                  onDeleteTodo={deleteTodo}
+                  onToggleTodo={toggleTodo}
+                />
+              </div>
             </div>
           </main>
         </div>
