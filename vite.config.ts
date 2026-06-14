@@ -5,7 +5,7 @@ import { defineConfig } from "vite"
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: "/todo-web-app/",
+  base: process.env.VERCEL ? "/" : "/todo-web-app/",
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
